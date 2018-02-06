@@ -1,20 +1,24 @@
 import {
-  JupyterLab, JupyterLabPlugin
+  JupyterLab, JupyterLabPlugin, ILayoutRestorer // new
 } from '@jupyterlab/application';
 
 import {
-  ICommandPalette
+  ICommandPalette, InstanceTracker // new
 } from '@jupyterlab/apputils';
+
+import {
+  JSONExt // new
+} from '@phosphor/coreutils';
+
+import {
+  Message
+} from '@phosphor/messaging';
 
 import {
   Widget
 } from '@phosphor/widgets';
 
 import '../style/index.css';
-
-import {
-  Message
-} from '@phosphor/messaging';
 /**
  * An xkcd comic viewer.
  */
@@ -63,17 +67,25 @@ class XkcdWidget extends Widget {
 /**
  * Activate the xckd widget extension.
  */
-function activate(app: JupyterLab, palette: ICommandPalette) {
+function activate(app: JupyterLab, palette: ICommandPalette, restorer: ILayoutRestorer) {
   console.log('JupyterLab extension jupyterlab_xkcd is activated!');
 
   // Create a single widget
-  let widget: XkcdWidget = new XkcdWidget();
+  let widget: XkcdWidget;
 
   // Add an application command
   const command: string = 'xkcd:open';
   app.commands.addCommand(command, {
     label: 'Random xkcd comic',
     execute: () => {
+      if (!widget) {
+        // Create a new widget
+        widget = new XkcdWidget();
+        widget.update();
+      }
+      if (!tracker.has(widget)) {
+        tracker.add(widget);
+      }
       if (!widget.isAttached) {
         // Attach the widget to the main work area if it's not there
         app.shell.addToMainArea(widget);
@@ -87,6 +99,14 @@ function activate(app: JupyterLab, palette: ICommandPalette) {
 
   // Add the command to the palette.
   palette.addItem({ command, category: 'Tutorial' });
+
+  // Track and restore the widget state
+  let tracker = new InstanceTracker<Widget>({ namespace: 'xkcd'});
+  restorer.restore(tracker, {
+    command,
+    args: () => JSONExt.emptyObject,
+    name: () => 'xkcd'
+  });
 };
 
 
@@ -96,7 +116,7 @@ function activate(app: JupyterLab, palette: ICommandPalette) {
 const extension: JupyterLabPlugin<void> = {
   id: 'jupyterlab_xkcd',
   autoStart: true,
-  requires: [ICommandPalette],
+  requires: [ICommandPalette, ILayoutRestorer],
   activate: activate
 };
 

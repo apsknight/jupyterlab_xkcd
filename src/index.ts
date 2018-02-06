@@ -28,7 +28,30 @@ const extension: JupyterLabPlugin<void> = {
     widget.id = 'xkcd_jupyterlab';
     widget.title.label = 'xkcd.com';
     widget.title.closable = true;
+    widget.addClass('jp-xkcdWidget');
+    
+    // Add an image element to panel
+    let img = document.createElement('img');
+    img.className = 'jp-xkcdCartoon';
+    widget.node.appendChild(img);
 
+    // Add an attribution badge
+    img.insertAdjacentHTML('afterend', 
+      `<div class="jp-xkcdAttribution">
+        <a href="https://creativecommons.org/licenses/by-nc/2.5/" class="jp-xkcdAttribution" target="_blank">
+          <img src="https://licensebuttons.net/l/by-nc/2.5/80x15.png" />
+        </a>
+      </div>`
+  );
+
+    // Fetch info about a random comic
+    fetch('https:////egszlpbmle.execute-api.us-east-1.amazonaws.com/prod').then(response => {
+      return response.json();
+    }).then(data => {
+      img.src = data.img;
+      img.alt = data.title;
+      img.title = data.alt;
+    });
     // Add an application command
     const command: string = 'xkcd:open';
     app.commands.addCommand(command, {

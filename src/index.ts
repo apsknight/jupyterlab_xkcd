@@ -98,7 +98,7 @@ function activate(app: JupyterLab, palette: ICommandPalette, restorer: ILayoutRe
   });
 
   // Add the command to the palette.
-  palette.addItem({ command, category: 'Tutorial' });
+  palette.addItem({ command, category: 'Entertainment' });
 
   // Track and restore the widget state
   let tracker = new InstanceTracker<Widget>({ namespace: 'xkcd'});

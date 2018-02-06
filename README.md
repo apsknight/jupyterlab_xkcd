@@ -1,7 +1,8 @@
 # jupyterlab_xkcd
 
-Show a random xkcd.com comic in a JupyterLab panel
+> Show a random xkcd.com comic in a JupyterLab panel.
 
+<img src="http://preview.ibb.co/bxVmrH/Screenshot_from_2018_02_06_20_06_01.png" alt="xkcd comic on Jupyterlab">
 
 ## Prerequisites
 
@@ -10,14 +11,16 @@ Show a random xkcd.com comic in a JupyterLab panel
 ## Installation
 
 ```bash
-jupyter labextension install jupyterlab_xkcd
+jupyter labextension install @apsknight/jupyterlab_xkcd
 ```
 
 ## Development
 
-For a development install (requires npm version 4 or later), do the following in the repository directory:
+For a development install (requires npm version 4 or later), fork this repository and do the following in the home directory:
 
 ```bash
+git clone https://github.com/<YOUR_USER_NAME>/jupyterlab_xkcd.git
+cd jupyterlab_xkcd
 npm install
 npm run build
 jupyter labextension link .
@@ -30,3 +33,6 @@ npm run build
 jupyter lab build
 ```
 
+## LICENSE
+
+[MIT](http://aps.mit-license.org)
